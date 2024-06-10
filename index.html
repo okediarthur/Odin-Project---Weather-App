@@ -3,12 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css">
     <title>Weather App</title>
   </head>
   <body>
     <h1>Current Weather</h1>
     <div class="weather-form">
-      <form id="userInput">
+      <form id="userInput" novalidate>
         <div>
           <label for="location">Enter Location:</label>
           <input type="text" id="location" required />
@@ -19,7 +20,7 @@
         </div>
       </form>
     </div>
-    <div class="weather-info">
+    <div id="weatherInfo" class="weather-info">
       <!-- Weather Data -->
     </div>
     <script src="script.js"></script>

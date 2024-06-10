@@ -1,11 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('location').addEventListener('input', () => validationLocation());
+    document.getElementById('location').addEventListener('input', validateLocation);
 });
 
-function validateLocation(){
+function validateLocation() {
     const location = document.getElementById('location').value.trim();
-    const submitError =document.getElementById('submitError');
-    if(location === ''){
+    const submitError = document.getElementById('submitError');
+    if (location === '') {
         submitError.classList.add('active');
         return false;
     } else {
@@ -14,44 +14,54 @@ function validateLocation(){
     }
 }
 
-function validateForm(){
+function validateForm() {
     const isLocationValid = validateLocation();
-    if(isLocationValid) {
+    if (isLocationValid) {
         fetchWeatherData();
     }
 }
 
-function fetchWeatherData(){
+async function fetchWeatherData() {
     const location = document.getElementById('location').value;
-    const apiKey = 'd1bf9ba395aa4764a92125520240606'
-    const apiUrl =  `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}&units=metric`;
+    const apiKey = 'd1bf9ba395aa4764a92125520240606'; 
+    const apiUrl = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}`;
 
-    fetch(apiUrl)
-        .then(repsonse => {
-            if(!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            const processedData = processWeatherData(data);
-            displayWeatherData(processedData);
-        })
-        .catch(error => displayError(error));
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        const processedData = processWeatherData(data);
+        displayWeatherData(processedData);
+    } catch (error) {
+        console.error('Fetch error:', error);
+        displayError(error);
+    }
 }
 
-function displayWeatherData(data){
-    const weatherInfo = document.getElementById('weatherInfo');
+function processWeatherData(data) {
+    return {
+        location: `${data.location.name}, ${data.location.country}`,
+        temperature: `${data.current.temp_c}°C`,
+        weather: data.current.condition.text,
+        humidity: `${data.current.humidity}%`,
+        windSpeed: `${data.current.wind_kph} kph`
+    };
+}
+
+function displayWeatherData(data) {
+    const weatherInfo = document.querySelector('.weather-info');
     weatherInfo.innerHTML = `
-    <h2>${data.location}</h2>
-    <p>Temperature: ${data.temperature}</p>
-    <p>Weather: ${data.weather}</p>
-    <p>Humidity: ${data.humidity}</p>
-    <p>Wind Speed: ${data.windSpeed}</p>
+        <h2>${data.location}</h2>
+        <p>Temperature: ${data.temperature}</p>
+        <p>Weather: ${data.weather}</p>
+        <p>Humidity: ${data.humidity}</p>
+        <p>Wind Speed: ${data.windSpeed}</p>
     `;
 }
 
-function displayError(error){
-    const weatherInfo = document.getElementById('weatherInfo');
+function displayError(error) {
+    const weatherInfo = document.querySelector('.weather-info');
     weatherInfo.innerHTML = `<p class="error">Error: ${error.message}</p>`;
 }
