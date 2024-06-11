@@ -70,6 +70,17 @@ body {
     display: block;
 }
 
+.loading {
+    display: none;
+    font-size: 18px;
+    color: #333;
+    margin-top: 20px;
+}
+
+.loading.active{
+    display: block;
+}
+
 footer{
     position: absolute;
     bottom: 10px;

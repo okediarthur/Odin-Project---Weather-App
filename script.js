@@ -26,6 +26,8 @@ async function fetchWeatherData() {
     const apiKey = 'd1bf9ba395aa4764a92125520240606'; 
     const apiUrl = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}`;
 
+    showLoading();
+
     try {
         const response = await fetch(apiUrl);
         if (!response.ok) {
@@ -37,6 +39,8 @@ async function fetchWeatherData() {
     } catch (error) {
         console.error('Fetch error:', error);
         displayError(error);
+    } finally {
+        hideLoading();
     }
 }
 
@@ -68,6 +72,26 @@ function displayError(error) {
 
 function clearForm() {
     document.getElementById('userInput').reset();
-    document.getElementById('weatherInfo').innerHTML = '';
-    document.getElementById('submitError').classList.remove('active');
+    const weatherInfo = document.querySelector('.weather-info');
+    if (weatherInfo) {
+        weatherInfo.innerHTML = '';
+    }
+    const submitError = document.getElementById('submitError');
+    if (submitError) {
+        submitError.classList.remove('active');
+    }
+}
+
+function showLoading() {
+    const loading = document.getElementById('loading');
+    if (loading) {
+        loading.classList.add('active');
+    }
+}
+
+function hideLoading() {
+    const loading = document.getElementById('loading');
+    if (loading) {
+        loading.classList.remove('active');
+    }
 }
