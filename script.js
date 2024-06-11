@@ -65,3 +65,9 @@ function displayError(error) {
     const weatherInfo = document.querySelector('.weather-info');
     weatherInfo.innerHTML = `<p class="error">Error: ${error.message}</p>`;
 }
+
+function clearForm() {
+    document.getElementById('userInput').reset();
+    document.getElementById('weatherInfo').innerHTML = '';
+    document.getElementById('submitError').classList.remove('active');
+}
